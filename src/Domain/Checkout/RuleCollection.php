@@ -19,7 +19,7 @@ class RuleCollection extends BaseCollection
     public function findRuleForProduct(Product $product): ?BulkPriceRule
     {
         foreach ($this->items as $rule) {
-            if ($rule->getItem() === $product) {
+            if ($rule->getProduct() === $product) {
                 return $rule;
             }
         }
