@@ -29,12 +29,12 @@ class CheckoutController extends AbstractController
         $checkout = new Checkout($ruleCollection);
 
         // Scan items at checkout
-        $checkout->scanItem($itemA);
-        $checkout->scanItem($itemA);
-        $checkout->scanItem($itemA); // Bulk price applies for item A
-        $checkout->scanItem($itemB);
-        $checkout->scanItem($itemB); // Bulk price applies for item B
-        $checkout->scanItem($itemC); // No bulk price, default price applies
+        $checkout->scanProduct($itemA);
+        $checkout->scanProduct($itemA);
+        $checkout->scanProduct($itemA); // Bulk price applies for item A
+        $checkout->scanProduct($itemB);
+        $checkout->scanProduct($itemB); // Bulk price applies for item B
+        $checkout->scanProduct($itemC); // No bulk price, default price applies
 
         // Get total price
         $total = $checkout->getTotal();

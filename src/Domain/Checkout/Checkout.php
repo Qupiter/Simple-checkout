@@ -13,7 +13,7 @@ class Checkout
         $this->ruleCollection = $ruleCollection;
     }
 
-    public function scanItem(Product $item): void
+    public function scanProduct(Product $item): void
     {
         $this->items->addItem($item);
     }
