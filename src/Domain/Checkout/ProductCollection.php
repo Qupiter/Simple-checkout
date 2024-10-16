@@ -19,4 +19,16 @@ class ProductCollection extends BaseCollection
         }
         $this->items[$hash]['quantity']++;
     }
+
+    public function mergeCollections(BaseCollection $collection): void
+    {
+        if (!$collection instanceof ProductCollection) {
+            throw new InvalidArgumentException('Expected an instance of' . ProductCollection::class);
+        }
+
+        foreach ($collection as $itemData) {
+            $item = $itemData['item'];
+            $this->addItem($item);
+        }
+    }
 }

@@ -22,4 +22,23 @@ abstract class BaseCollection  implements IteratorAggregate, Countable
     }
 
    abstract public function addItem(mixed $item): void;
+
+    public function addItems(array $items): void
+    {
+        foreach ($items as $item) {
+            $this->addItem($item);
+        }
+    }
+
+    public function mergeCollections(BaseCollection $collection): void
+    {
+        foreach ($collection as $itemData) {
+            $this->addItem($itemData);
+        }
+    }
+
+    public function clear(): void
+    {
+        $this->items = [];
+    }
 }
