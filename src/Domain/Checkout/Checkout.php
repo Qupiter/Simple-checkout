@@ -4,28 +4,38 @@ namespace App\Domain\Checkout;
 
 class Checkout
 {
-    private ProductCollection $items;
+    private ProductCollection $productCollection;
     private RuleCollection $ruleCollection;
 
     public function __construct(RuleCollection $ruleCollection)
     {
-        $this->items = new ProductCollection();
+        $this->productCollection = new ProductCollection();
         $this->ruleCollection = $ruleCollection;
     }
 
-    public function scanProduct(Product $item): void
+    public function scanProduct(Product $product): void
     {
-        $this->items->addItem($item);
+        $this->productCollection->addItem($product);
+    }
+
+    public function scanCollection(ProductCollection $productCollection): void
+    {
+        $this->productCollection->mergeCollections($productCollection);
+    }
+
+    public function clearCart(): void
+    {
+        $this->productCollection->clear();
     }
 
     public function getTotal(): int
     {
         $total = 0;
 
-        foreach ($this->items as $itemData) {
+        foreach ($this->productCollection as $productData) {
             /** @var Product $item */
-            $item = $itemData['item'];
-            $quantity = $itemData['quantity'];
+            $item = $productData['item'];
+            $quantity = $productData['quantity'];
 
             // Find the matching pricing rule for the item
             $rule = $this->ruleCollection->findRuleForProduct($item);
