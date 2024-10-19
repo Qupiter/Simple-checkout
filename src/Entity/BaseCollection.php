@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Domain;
+namespace App\Entity;
 
+use ArrayIterator;
 use Countable;
 use IteratorAggregate;
-use ArrayIterator;
 use Traversable;
 
 abstract class BaseCollection  implements IteratorAggregate, Countable

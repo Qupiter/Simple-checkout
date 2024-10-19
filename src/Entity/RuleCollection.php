@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Domain\Checkout;
+namespace App\Entity;
 
-use App\Domain\BaseCollection;
 use InvalidArgumentException;
 
 class RuleCollection extends BaseCollection

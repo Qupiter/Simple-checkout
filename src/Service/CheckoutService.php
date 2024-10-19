@@ -1,8 +1,12 @@
 <?php
 
-namespace App\Domain\Checkout;
+namespace App\Service;
 
-class Checkout
+use App\Entity\Product;
+use App\Entity\ProductCollection;
+use App\Entity\RuleCollection;
+
+class CheckoutService
 {
     private ProductCollection $productCollection;
     private RuleCollection $ruleCollection;
@@ -32,8 +36,8 @@ class Checkout
     {
         $total = 0;
 
+        /** @var Product $productData */
         foreach ($this->productCollection as $productData) {
-            /** @var Product $item */
             $item = $productData['item'];
             $quantity = $productData['quantity'];
 
