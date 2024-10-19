@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
-use App\Domain\Checkout\BulkPriceRule;
 use App\Domain\Checkout\Checkout;
-use App\Domain\Checkout\Product;
-use App\Domain\Checkout\ProductCollection;
-use App\Domain\Checkout\RuleCollection;
+use App\Entity\BulkPriceRule;
+use App\Entity\Product;
+use App\Entity\ProductCollection;
+use App\Entity\RuleCollection;
+use App\Service\CheckoutService;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,9 +16,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class CheckoutController extends AbstractController
 {
     private ProductCollection $productCollection;
-    private Checkout $checkout;
+    private CheckoutService $checkout;
 
-    #[Route('/checkout', name: 'app_checkout')]
+    #[Route('/checkout/{items}', name: 'app_checkout', methods: ['GET'])]
     public function index(string $items): JsonResponse
     {
         // Create items
@@ -34,7 +35,7 @@ class CheckoutController extends AbstractController
         ]);
 
         // Initialize checkout with the rule collection
-        $checkout = new Checkout($ruleCollection);
+        $checkout = new CheckoutService($ruleCollection);
 
         // Scan items at checkout based on the input string
         foreach (str_split($items) as $itemChar) {
