@@ -17,23 +17,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class BulkPriceRuleController extends AbstractController
 {
     public function __construct(#
-       private readonly BulkPriceRuleService $bulkPriceRuleService
+        private readonly BulkPriceRuleService $bulkPriceRuleService,
+        private readonly ProductRepository $productRepository,
     ) {}
 
     #[Route('', methods: ['GET'])]
     public function index(): JsonResponse
     {
         $rules = $this->bulkPriceRuleService->getAllBulkPriceRules();
-        $data = array_map(fn($rule) => $rule->serialize(), $rules);
+        $data = array_map(fn($rule) => $rule->serialize(), $rules->toArray());
 
         return $this->json($data);
     }
 
     #[Route('', methods: ['POST'])]
-    public function create(Request $request, ProductRepository $productRepository): JsonResponse
+    public function create(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $product = $productRepository->findBySku($data['sku']);
+        $product = $this->productRepository->findBySku($data['sku']);
 
         if (!$product) {
             return $this->json(['error' => 'Product not found'], 404);
@@ -47,14 +48,31 @@ class BulkPriceRuleController extends AbstractController
     public function update(Request $request, string $sku): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $rule = $this->bulkPriceRuleService->updateRule($sku, $data);
+        $product = $this->productRepository->findBySku($sku);
+
+        if (!$product) {
+            return $this->json(['error' => 'Product not found'], 404);
+        }
+
+        $rule = $this->bulkPriceRuleService->updateRule($product, $data['bulk_quantity'], $data['bulk_price']);
         return $this->json($rule->serialize());
     }
 
     #[Route('/{sku}', methods: ['DELETE'])]
     public function delete(string $sku): JsonResponse
     {
-        $this->bulkPriceRuleService->disableRulesBySku($sku);
+        $product = $this->productRepository->findBySku($sku);
+
+        if (!$product) {
+            return $this->json(['error' => 'Product not found'], 404);
+        }
+
+        $this->bulkPriceRuleService->disableRulesBySku($product);
         return $this->json(['message' => 'Rule disabled'], 204);
+    }
+
+    private function getProduct(string $sku): ?Product
+    {
+        return $this->productRepository->findBySku($sku);
     }
 }

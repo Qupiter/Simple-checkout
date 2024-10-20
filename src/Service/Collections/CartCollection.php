@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Entity;
+namespace App\Service\Collections;
 
+use App\Entity\Product;
 use InvalidArgumentException;
 
-class ProductCollection extends BaseCollection
+class CartCollection extends BaseCollection
 {
     public function addItem(mixed $item): void
     {
@@ -21,8 +22,8 @@ class ProductCollection extends BaseCollection
 
     public function mergeCollections(BaseCollection $collection): void
     {
-        if (!$collection instanceof ProductCollection) {
-            throw new InvalidArgumentException('Expected an instance of' . ProductCollection::class);
+        if (!$collection instanceof CartCollection) {
+            throw new InvalidArgumentException('Expected an instance of' . CartCollection::class);
         }
 
         foreach ($collection as $itemData) {

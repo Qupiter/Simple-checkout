@@ -74,11 +74,17 @@ class Product
 
     public function serialize(): array
     {
-        return [
+        $serialized = [
             'sku' => $this->getSku(),
             'price' => $this->getPrice(),
-            'bulkPriceRules' => $this->serializeActiveBulkPriceRules(),
         ];
+
+        $bulkPriceRules = $this->serializeActiveBulkPriceRules();
+        if($bulkPriceRules) {
+            $serialized['bulkPriceRules'] = $bulkPriceRules;
+        }
+
+        return $serialized;
     }
 
     /**

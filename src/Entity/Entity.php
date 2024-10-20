@@ -17,6 +17,8 @@ trait Entity
     #[ORM\Column(type: "datetime_immutable")]
     private DateTimeImmutable $updatedAt;
 
+    abstract public function serialize(): array;
+
     public function getId(): int
     {
         return $this->id;

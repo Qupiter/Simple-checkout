@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\BulkPriceRule;
-use App\Entity\Product;
+use App\Entity\Collections\RuleCollection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,24 +14,28 @@ class BulkPriceRuleRepository extends ServiceEntityRepository
         parent::__construct($registry, BulkPriceRule::class);
     }
 
-    public function findAllActive(): array
+    public function findAllActive(): RuleCollection
     {
-        return $this->createQueryBuilder('b')
+        $qb = $this->createQueryBuilder('b')
             ->andWhere('b.isActive = :active')
-            ->setParameter('active', true)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('active', true);
+
+        $rules = $qb->getQuery()->getResult();
+
+        return new RuleCollection($rules);
     }
 
-    public function findAllActiveRulesByProductSku(string $sku): array
+    public function findAllActiveRulesByProductSku(string $sku): RuleCollection
     {
-        return $this->createQueryBuilder('b')
+        $qb = $this->createQueryBuilder('b')
             ->innerJoin('b.product', 'p')
             ->andWhere('p.sku = :sku')
             ->andWhere('p.isActive = true')
             ->andWhere('b.isActive = true')
-            ->setParameter('sku', $sku)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('sku', $sku);
+
+        $rules = $qb->getQuery()->getResult();
+
+        return new RuleCollection($rules);
     }
 }

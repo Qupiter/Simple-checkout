@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Collections\ProductCollection;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,7 +15,7 @@ class ProductService
         private readonly BulkPriceRuleService $bulkPriceRuleService
     ) {}
 
-    public function getAllProducts(): array
+    public function getAllProducts(): ProductCollection
     {
         return $this->productRepository->findAllActive();
     }
@@ -37,6 +38,7 @@ class ProductService
 
         // Create and persist the new product
         $product = new Product($sku, $price);
+        $product->setCreatedAtValue();
         $this->entityManager->persist($product);
         $this->entityManager->flush();
 
@@ -50,7 +52,9 @@ class ProductService
 
         // Update product's price and set it as active
         $product->setPrice($price);
+        $product->setIsActive(true);
 
+        $product->setUpdatedAtValue();
         $this->entityManager->flush();
         return $product;
     }
