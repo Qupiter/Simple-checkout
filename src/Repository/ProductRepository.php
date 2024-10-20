@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Collections\ProductCollection;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,12 +25,14 @@ class ProductRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findAllActive(): array
+    public function findAllActive(): ProductCollection
     {
-        return $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->andWhere('p.isActive = :active')
-            ->setParameter('active', true)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('active', true);
+
+        $products = $qb->getQuery()->getResult();
+
+        return new ProductCollection($products);
     }
 }

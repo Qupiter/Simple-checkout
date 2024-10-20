@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace App\Service\Collections;
 
 use ArrayIterator;
 use Countable;
@@ -21,7 +21,7 @@ abstract class BaseCollection  implements IteratorAggregate, Countable
         return count($this->items);
     }
 
-   abstract public function addItem(mixed $item): void;
+    abstract public function addItem(mixed $item): void;
 
     public function addItems(array $items): void
     {

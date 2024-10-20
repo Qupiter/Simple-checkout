@@ -2,67 +2,103 @@
 
 namespace App\Controller;
 
-use App\Domain\Checkout\Checkout;
-use App\Entity\BulkPriceRule;
-use App\Entity\Product;
-use App\Entity\ProductCollection;
-use App\Entity\RuleCollection;
+use App\Repository\OrderRepository;
+use App\Service\BulkPriceRuleService;
 use App\Service\CheckoutService;
-use InvalidArgumentException;
+use App\Service\Exceptions\OrderCanceledException;
+use App\Service\Exceptions\OrderCompletedException;
+use App\Service\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
+#[Route('/api/checkout')]
 class CheckoutController extends AbstractController
 {
-    private ProductCollection $productCollection;
-    private CheckoutService $checkout;
+    public function __construct(
+        private readonly ProductService $productService,
+        private readonly CheckoutService $checkoutService,
+        private readonly BulkPriceRuleService $bulkPriceRuleService,
+    ) {}
 
-    #[Route('/checkout/{items}', name: 'app_checkout', methods: ['GET'])]
-    public function index(string $items): JsonResponse
+    #[Route('/scan/{skus}', name: 'app_checkout', methods: ['GET'])]
+    public function scan(string $skus): JsonResponse
     {
-        // Create items
-        $productA = new Product('A', 50);
-        $productB = new Product('B', 30);
-        $productC = new Product('C', 20);
-        $productD = new Product('D', 10);
+        // get active products
+        $products = $this->productService->getAllProducts();
 
-        // Create the rule collection and add bulk pricing rules
-        $ruleCollection = new RuleCollection();
-        $ruleCollection->addItems([
-            new BulkPriceRule($productA, 3, 130), // Buy 3 A's for 130
-            new BulkPriceRule($productB, 2, 45),  // Buy 2 B's for 45
-        ]);
-
-        // Initialize checkout with the rule collection
-        $checkout = new CheckoutService($ruleCollection);
-
-        // Scan items at checkout based on the input string
-        foreach (str_split($items) as $itemChar) {
-            switch ($itemChar) {
-                case 'A':
-                    $checkout->scanProduct($productA);
-                    break;
-                case 'B':
-                    $checkout->scanProduct($productB);
-                    break;
-                case 'C':
-                    $checkout->scanProduct($productC);
-                    break;
-                case 'D':
-                    $checkout->scanProduct($productD);
-                    break;
-                default:
-                    throw new InvalidArgumentException('Expected an instance of' . Product::class);
-            }
+        if(!$products->hasAllSkus(str_split($skus))) {
+            return $this->json(['error' => 'Product not found'], 404);
         }
 
-        // Get total price
-        $total = $checkout->getTotal();
+        // get active promotions
+        $rules = $this->bulkPriceRuleService->getAllBulkPriceRules();
+
+        // Initialize checkout with the rule collection
+        $this->checkoutService->setBulkPriceRules($rules);
+
+        // Scan items at checkout based on the input string
+        foreach (str_split($skus) as $sku) {
+            $this->checkoutService->scanProduct($products->getBySku($sku));
+        }
+
+        // Create order
+        $order = $this->checkoutService->saveOrder();
 
         // Clear the cart after checkout
-        $checkout->clearCart();
+        $this->checkoutService->clearCart();
 
-        return new JsonResponse("Total for items '$items': $total cents"); // Display total
+        return new JsonResponse($order->serialize()); // Display order
+    }
+
+    #[Route('/completeOrder/{id}', name: 'app_order_complete', methods: ['GET'])]
+    public function complete(int $id): JsonResponse
+    {
+        $order = $this->checkoutService->getOrder($id);
+        if (!$order) {
+            return $this->json(['error' => 'Order not found'], 404);
+        }
+
+        try {
+            $this->checkoutService->completeOrder($order);
+        } catch (\Exception $exception) {
+            return $this->handleExceptions($exception);
+        }
+
+        return new JsonResponse($order->serialize());
+    }
+
+    #[Route('/cancelOrder/{id}', name: 'app_order_complete', methods: ['GET'])]
+    public function cancel(int $id): JsonResponse
+    {
+        $order = $this->checkoutService->getOrder($id);
+        if (!$order) {
+            return $this->json(['error' => 'Order not found'], 404);
+        }
+
+        try {
+            $this->checkoutService->cancelOrder($order);
+        } catch (\Exception $exception) {
+            return $this->handleExceptions($exception);
+        }
+
+        return new JsonResponse($order->serialize());
+    }
+
+    #[Route('/orderHistory', name: 'app_order_history', methods: ['GET'])]
+    public function orderHistory(OrderRepository $orderRepository): JsonResponse
+    {
+        $orders = $orderRepository->findAll();
+        $data = array_map(fn($order) => $order->serialize(), $orders);
+        return $this->json($data);
+    }
+
+    private function handleExceptions(\Exception $exception): JsonResponse
+    {
+        return match ($exception::class) {
+            OrderCanceledException::class => $this->json(['error' => $exception->getMessage()], 400),
+            OrderCompletedException::class => $this->json(['error' => $exception->getMessage()], 400),
+            default => $this->json(['error' => $exception->getMessage()], 500),
+        };
     }
 }

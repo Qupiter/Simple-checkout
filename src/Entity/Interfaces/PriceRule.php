@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Interfaces;
 
-use App\Domain\Checkout\Product;
+use App\Entity\Product;
 
 interface PriceRule
 {

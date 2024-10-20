@@ -19,7 +19,7 @@ class ProductController extends AbstractController
     public function index(): JsonResponse
     {
         $products = $this->productService->getAllProducts();
-        $data = array_map(fn($product) => $product->serialize(), $products);
+        $data = array_map(fn($product) => $product->serialize(), $products->toArray());
         return $this->json($data);
     }
 

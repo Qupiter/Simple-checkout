@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Tests\Domain\Checkout;
+namespace tests\Domain\Checkout;
 
 use App\Domain\Checkout\BulkPriceRule;
 use App\Domain\Checkout\Checkout;
 use App\Domain\Checkout\Product;
-use App\Entity\RuleCollection;
+use App\Entity\Collections\RuleCollection;
 use PHPUnit\Framework\TestCase;
 
 class CheckoutTest extends TestCase

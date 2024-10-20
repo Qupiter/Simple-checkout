@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Interfaces\PriceRule;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: 'App\Repository\BulkPriceRuleRepository')]
@@ -86,8 +87,7 @@ class BulkPriceRule implements PriceRule
         return [
             'id' => $this->getId(),
             'bulkQuantity' => $this->getBulkQuantity(),
-            'bulkPrice' => $this->getBulkPrice(),
-            'isActive' => $this->isActive(),
+            'bulkPrice' => $this->getBulkPrice()
         ];
     }
 }

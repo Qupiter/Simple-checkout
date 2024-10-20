@@ -1,0 +1,23 @@
+[
+  {
+    "product": "D",
+    "quantity": 1,
+    "appliedRule": null,
+    "regularPrice": 10,
+    "discountedPrice": 0
+  },
+  {
+    "product": "A",
+    "quantity": 6,
+    "appliedRule": {},
+    "regularPrice": 300,
+    "discountedPrice": 260
+  },
+  {
+    "product": "B",
+    "quantity": 2,
+    "appliedRule": {},
+    "regularPrice": 60,
+    "discountedPrice": 45
+  }
+]
