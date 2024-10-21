@@ -10,6 +10,7 @@ use App\Service\Exceptions\OrderCompletedException;
 use App\Service\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/api/checkout')]
@@ -21,13 +22,14 @@ class CheckoutController extends AbstractController
         private readonly BulkPriceRuleService $bulkPriceRuleService,
     ) {}
 
-    #[Route('/scan/{skus}', name: 'app_checkout', methods: ['GET'])]
-    public function scan(string $skus): JsonResponse
+    #[Route('/scan', name: 'app_checkout', methods: ['POST'])]
+    public function scan(Request $request): JsonResponse
     {
+        $data = json_decode($request->getContent(), true);
         // get active products
         $products = $this->productService->getAllProducts();
 
-        if(!$products->hasAllSkus(str_split($skus))) {
+        if(!$products->hasAllSkus($data['skus'])) {
             return $this->json(['error' => 'Product not found'], 404);
         }
 
@@ -38,7 +40,7 @@ class CheckoutController extends AbstractController
         $this->checkoutService->setBulkPriceRules($rules);
 
         // Scan items at checkout based on the input string
-        foreach (str_split($skus) as $sku) {
+        foreach ($data['skus'] as $sku) {
             $this->checkoutService->scanProduct($products->getBySku($sku));
         }
 
