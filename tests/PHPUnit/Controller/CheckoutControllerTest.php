@@ -48,6 +48,7 @@ class CheckoutControllerTest extends BaseWebTestCase
 
     public function testScanReturnsOrder(): void
     {
+        $data = ['skus' => ['A']];
         // Set up mock product data
         $productA = new Product('A', 50);
         $this->productServiceMock->method('getAllProducts')->willReturn(new ProductCollection([$productA]));
@@ -60,7 +61,7 @@ class CheckoutControllerTest extends BaseWebTestCase
             ));
 
         // Simulate scanning products
-        $this->client->request('GET', '/api/checkout/scan/A');
+        $this->client->request('POST', '/api/checkout/scan', [], [], [], json_encode($data));
 
         // Assert that the response is OK
         $this->assertResponseIsSuccessful();
@@ -73,12 +74,12 @@ class CheckoutControllerTest extends BaseWebTestCase
 
     public function testScanReturnsNotFound(): void
     {
-        $skuList = 'XYZ'; // Non-existing SKUs
+        $data = ['skus' => ['X', 'Y', 'Z']]; // Non-existing SKUs
         $this->productServiceMock->method('getAllProducts')
             ->willReturn(new ProductCollection([])); // No products available
 
         // Simulate the request to the scan route
-        $this->client->request('GET', '/api/checkout/scan/' . $skuList);
+        $this->client->request('POST', '/api/checkout/scan', [], [], [], json_encode($data));
 
         // Assert that the response status is 404
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
