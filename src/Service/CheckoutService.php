@@ -30,7 +30,7 @@ class CheckoutService
         $this->ruleCollection = $rules;
     }
 
-    public function getOrder(int $id): Order
+    public function getOrder(int $id): ?Order
     {
         return $this->orderRepository->findOneBy(['id' => $id]);
     }
@@ -48,40 +48,6 @@ class CheckoutService
     public function clearCart(): void
     {
         $this->cartCollection->clear();
-    }
-
-    public function generateBreakdown(): void
-    {
-        $total = 0;
-        $discountBreakdown = [];
-
-        /** @var Product $productData */
-        foreach ($this->cartCollection as $productData) {
-            $item = $productData['item'];
-            $quantity = $productData['quantity'];
-
-            // Find the matching pricing rule for the item
-            $rule = $this->ruleCollection->findRuleForProduct($item);
-
-            if ($rule) {
-                // Apply bulk pricing rule
-                $discountedPrice = $rule->calculatePrice($quantity);
-                $total += $discountedPrice;
-            } else {
-                // Default pricing (no bulk rule)
-                $total += $item->getPrice() * $quantity;
-            }
-
-            $discountBreakdown[] = [
-                'product' => $item->getSku(),
-                'quantity' => $quantity,
-                'regularPrice' => $item->getPrice() * $quantity,
-                'discountedPrice' => $discountedPrice ?? 0,
-                'appliedRule' => $rule?->serialize() ?? null,
-            ];
-        }
-
-        $this->order = new Order($total, $discountBreakdown);
     }
 
     public function saveOrder(): Order
@@ -126,5 +92,39 @@ class CheckoutService
 
         $this->entityManager->persist($order);
         $this->entityManager->flush();
+    }
+
+    private function generateBreakdown(): void
+    {
+        $total = 0;
+        $discountBreakdown = [];
+
+        /** @var Product $productData */
+        foreach ($this->cartCollection as $productData) {
+            $item = $productData['item'];
+            $quantity = $productData['quantity'];
+
+            // Find the matching pricing rule for the item
+            $rule = $this->ruleCollection->findRuleForProduct($item);
+
+            if ($rule) {
+                // Apply bulk pricing rule
+                $discountedPrice = $rule->calculatePrice($quantity);
+                $total += $discountedPrice;
+            } else {
+                // Default pricing (no bulk rule)
+                $total += $item->getPrice() * $quantity;
+            }
+
+            $discountBreakdown[] = [
+                'product' => $item->getSku(),
+                'quantity' => $quantity,
+                'regularPrice' => $item->getPrice() * $quantity,
+                'discountedPrice' => $discountedPrice ?? 0,
+                'appliedRule' => $rule?->serialize() ?? null,
+            ];
+        }
+
+        $this->order = new Order($total, $discountBreakdown);
     }
 }

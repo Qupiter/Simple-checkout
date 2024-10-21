@@ -2,12 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\BulkPriceRule;
-use App\Entity\Product;
-use App\Repository\BulkPriceRuleRepository;
 use App\Repository\ProductRepository;
 use App\Service\BulkPriceRuleService;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -69,10 +65,5 @@ class BulkPriceRuleController extends AbstractController
 
         $this->bulkPriceRuleService->disableRulesBySku($product);
         return $this->json(['message' => 'Rule disabled'], 204);
-    }
-
-    private function getProduct(string $sku): ?Product
-    {
-        return $this->productRepository->findBySku($sku);
     }
 }

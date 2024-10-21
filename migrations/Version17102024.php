@@ -9,7 +9,6 @@ final class Version17102024 extends AbstractMigration
 {
     public function up(Schema $schema): void
     {
-        // Create the products table if it doesn't exist, with created_at and updated_at fields
         $this->addSql("CREATE TABLE IF NOT EXISTS products (
             id INT AUTO_INCREMENT NOT NULL, 
             sku VARCHAR(255) NOT NULL,
@@ -20,7 +19,6 @@ final class Version17102024 extends AbstractMigration
             PRIMARY KEY(id)
         )");
 
-        // Create the bulk_price_rules table if it doesn't exist, with created_at and updated_at fields
         $this->addSql("CREATE TABLE IF NOT EXISTS bulk_price_rules (
             id INT AUTO_INCREMENT NOT NULL, 
             bulk_quantity INT NOT NULL, 
@@ -31,6 +29,15 @@ final class Version17102024 extends AbstractMigration
             updated_at DATETIME NOT NULL,
             PRIMARY KEY(id), 
             CONSTRAINT FK_bulk_price_rules_products_id FOREIGN KEY (product_id) REFERENCES products (id)  -- Correct foreign key reference
+        )");
+
+        $this->addSql("CREATE TABLE orders (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            total_price DECIMAL(10, 2) NOT NULL,
+            discount_breakdown JSON NOT NULL,  -- Assuming you store item details in JSON format
+            status ENUM('created', 'completed', 'canceled') NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         )");
 
         // Insert initial data into the products table
@@ -52,9 +59,11 @@ final class Version17102024 extends AbstractMigration
         // Drop data in reverse order
         $this->addSql("DELETE FROM bulk_price_rules");
         $this->addSql("DELETE FROM products");
+        $this->addSql("DELETE FROM orders");
 
         // Optionally, you can drop tables here as well
         $this->addSql("DROP TABLE IF EXISTS bulk_price_rules");
         $this->addSql("DROP TABLE IF EXISTS products");
+        $this->addSql("DROP TABLE IF EXISTS orders");
     }
 }

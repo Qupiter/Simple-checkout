@@ -11,7 +11,7 @@ class ProductCollection extends ArrayCollection
     public function addItem(mixed $element): void
     {
         if (!$element instanceof Product) {
-            throw new InvalidArgumentException('Expected an instance of' . Product::class);
+            throw new InvalidArgumentException('Expected an instance of ' . Product::class);
         }
 
         $this->add($element);
