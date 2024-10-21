@@ -19,9 +19,16 @@ trait Entity
 
     abstract public function serialize(): array;
 
-    public function getId(): int
+    public function getId(): ?int
     {
-        return $this->id;
+        return $this->id ?? null;
+    }
+
+    public function setId(int $id): void
+    {
+        if(!isset($this->id)) {
+            $this->id = $id;
+        }
     }
 
     #[ORM\PrePersist]

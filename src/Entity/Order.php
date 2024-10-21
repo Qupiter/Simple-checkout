@@ -27,13 +27,6 @@ class Order
         $this->status = OrderStatus::CREATED; // Default status
     }
 
-    // Getters and Setters
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
     public function getTotalPrice(): int
     {
         return $this->totalPrice;
@@ -70,8 +63,8 @@ class Order
     public function serialize(): array
     {
         return [
-            'id' => $this->id,
-            'status' => $this->status,
+            'id' => $this->getId(),
+            'status' => $this->status->name,
             'totalPrice' => $this->totalPrice,
             'discountBreakdown' => $this->discountBreakdown,
         ];

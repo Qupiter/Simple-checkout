@@ -48,7 +48,7 @@ class CheckoutController extends AbstractController
         // Clear the cart after checkout
         $this->checkoutService->clearCart();
 
-        return new JsonResponse($order->serialize()); // Display order
+        return new JsonResponse($order->serialize());
     }
 
     #[Route('/completeOrder/{id}', name: 'app_order_complete', methods: ['GET'])]
@@ -68,7 +68,7 @@ class CheckoutController extends AbstractController
         return new JsonResponse($order->serialize());
     }
 
-    #[Route('/cancelOrder/{id}', name: 'app_order_complete', methods: ['GET'])]
+    #[Route('/cancelOrder/{id}', name: 'app_order_cancel', methods: ['GET'])]
     public function cancel(int $id): JsonResponse
     {
         $order = $this->checkoutService->getOrder($id);
