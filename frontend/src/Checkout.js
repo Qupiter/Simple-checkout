@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const CheckoutResponse = ({ response, onOrderCompleteOrCancel }) => {
+    const apiUrl = process.env.REACT_APP_API_URL;
     const handleCompleteOrder = () => {
-        axios.get(`http://localhost/api/checkout/completeOrder/${response.id}`)
+        axios.get(`${apiUrl}/checkout/completeOrder/${response.id}`)
             .then(res => {
                 console.log('Order completed:', res.data);
                 // Handle successful completion (e.g., display a message)
@@ -14,7 +15,7 @@ const CheckoutResponse = ({ response, onOrderCompleteOrCancel }) => {
     };
 
     const handleCancelOrder = () => {
-        axios.get(`http://localhost/api/checkout/cancelOrder/${response.id}`)
+        axios.get(`${apiUrl}/checkout/cancelOrder/${response.id}`)
             .then(res => {
                 console.log('Order canceled:', res.data);
                 // Handle successful cancellation (e.g., display a message)

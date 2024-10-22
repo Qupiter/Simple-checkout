@@ -2,8 +2,9 @@ import React from 'react';
 import axios from 'axios';
 
 const Breakdown = ({ isOpen, onClose, breakdown, totalPrice, orderId, status }) => {
+    const apiUrl = process.env.REACT_APP_API_URL;
     const handleCompleteOrder = () => {
-        axios.post(`http://localhost/api/checkout/completeOrder/${orderId}`)
+        axios.post(`${apiUrl}/checkout/completeOrder/${orderId}`)
             .then(response => {
                 alert('Order completed successfully');
                 onClose(); // Close the modal after completing the order
@@ -16,7 +17,7 @@ const Breakdown = ({ isOpen, onClose, breakdown, totalPrice, orderId, status }) 
     };
 
     const handleCancelOrder = () => {
-        axios.post(`http://localhost/api/checkout/cancelOrder/${orderId}`)
+        axios.post(`${apiUrl}/checkout/cancelOrder/${orderId}`)
             .then(response => {
                 alert('Order canceled successfully');
                 onClose(); // Close the modal after canceling the order

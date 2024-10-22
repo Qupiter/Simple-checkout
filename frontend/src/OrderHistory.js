@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import BreakdownModal from './Breakdown';
 
 const OrderHistory = () => {
+    const apiUrl = process.env.REACT_APP_API_URL;
     const [orders, setOrders] = useState([]);
     const [selectedBreakdown, setSelectedBreakdown] = useState(null);
     const [selectedTotalPrice, setSelectedTotalPrice] = useState(null);
@@ -13,7 +14,7 @@ const OrderHistory = () => {
     const [selectedStatus, setSelectedStatus] = useState(null);
 
     useEffect(() => {
-        axios.get('http://localhost/api/checkout/orderHistory')
+        axios.get(`${apiUrl}/checkout/orderHistory`)
             .then(response => {
                 setOrders(response.data);
             })
