@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const BulkPriceRules = ({ fetchProducts }) => {
+    const apiUrl = process.env.REACT_APP_API_URL;
     const [selectedSku, setSelectedSku] = useState('');
     const [bulkQuantity, setBulkQuantity] = useState('');
     const [bulkPrice, setBulkPrice] = useState('');
@@ -10,14 +11,14 @@ const BulkPriceRules = ({ fetchProducts }) => {
 
     useEffect(() => {
         // Fetch available products for the dropdown
-        axios.get('http://localhost/api/products')
+        axios.get(`${apiUrl}/products`)
             .then(response => setProducts(response.data))
             .catch(error => console.error('Error fetching products:', error));
     }, [fetchProducts]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('http://localhost/api/bulkPriceRules', { sku: selectedSku, bulk_quantity: bulkQuantity, bulk_price: bulkPrice })
+        axios.post(`${apiUrl}/bulkPriceRules`, { sku: selectedSku, bulk_quantity: bulkQuantity, bulk_price: bulkPrice })
             .then(() => {
                 setSelectedSku('');
                 setBulkQuantity('');

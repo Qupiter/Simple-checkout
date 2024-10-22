@@ -1,9 +1,28 @@
+# config/packages/nelmio_cors.yaml
 nelmio_cors:
     defaults:
-        allow_origin: ['http://localhost:3000']  # Ensure this matches your React app's URL
-        allow_credentials: true
-        allow_headers: ['Content-Type', 'Authorization']
-        allow_methods: ['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE']
-        max_age: 3600
+        allow_credentials: true  # Set to true if you need to support cookies or authentication
+        allow_origin: []          # No default origins
+        allow_headers: []         # No default headers
+        allow_methods: []         # No default methods
+        allow_private_network: false
+        expose_headers: []        # No exposed headers by default
+        max_age: 3600             # Cache preflight request for 1 hour
+        hosts: []                 # No specific host restrictions
+        origin_regex: false
+        forced_allow_origin_value: ~
+        skip_same_as_origin: true
+
     paths:
-        '^/api/': ~
+        '^/api/':  # Apply CORS settings to API routes
+            allow_origin: ['*']  # Allow requests from any origin (useful for development)
+            allow_headers: ['Content-Type', 'Authorization', 'X-Custom-Auth']  # Add any custom headers you need
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS']  # Allow necessary HTTP methods
+            max_age: 3600  # Cache preflight response for 1 hour
+
+        '^/':  # Apply CORS settings to all other routes (optional, adjust as needed)
+            origin_regex: true
+            allow_origin: ['^http://localhost:[0-9]+', '^http://frontend:3000$']  # Allow requests from localhost and the frontend service in Docker
+            allow_headers: ['Content-Type', 'Authorization', 'X-Custom-Auth']  # Add any headers you need
+            allow_methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS']  # Allow necessary HTTP methods
+            max_age: 3600  # Cache preflight response for 1 hour

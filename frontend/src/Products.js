@@ -7,7 +7,10 @@ import CheckoutResponse from "./Checkout";
 import OrderHistory from './OrderHistory';
 import {useNavigate} from "react-router-dom";
 
+
+
 const Products = () => {
+    const apiUrl = process.env.REACT_APP_API_URL;
     const [products, setProducts] = useState([]);
     const [sku, setSku] = useState('');
     const [price, setPrice] = useState('');
@@ -27,7 +30,7 @@ const Products = () => {
     }, []);
 
     const fetchProducts = () => {
-        axios.get('http://localhost/api/products')
+        axios.get(`${apiUrl}/products`)
             .then(response => setProducts(response.data))
             .catch(error => console.error('Error fetching products:', error));
     };
@@ -36,7 +39,7 @@ const Products = () => {
         e.preventDefault();
 
         if (isEditing) {
-            axios.put(`http://localhost/api/products/${editSku}`, { price })
+            axios.put(`${apiUrl}/products/${editSku}`, { price })
                 .then(() => {
                     setIsEditing(false);
                     setSku('');
@@ -45,7 +48,7 @@ const Products = () => {
                 })
                 .catch(error => console.error('Error updating product:', error));
         } else {
-            axios.post('http://localhost/api/products', { sku, price })
+            axios.post(`${apiUrl}/products`, { sku, price })
                 .then(() => {
                     setSku('');
                     setPrice('');
@@ -63,13 +66,13 @@ const Products = () => {
     };
 
     const handleDelete = (sku) => {
-        axios.delete(`http://localhost/api/products/${sku}`)
+        axios.delete(`${apiUrl}/products/${sku}`)
             .then(() => fetchProducts())
             .catch(error => console.error('Error deleting product:', error));
     };
 
     const handleDisableRule = (sku) => {
-        axios.delete(`http://localhost/api/bulkPriceRules/${sku}`)
+        axios.delete(`${apiUrl}/bulkPriceRules/${sku}`)
             .then(() => {
                 // Optionally, refresh the product list after disabling the rule
                 fetchProducts(); // Fetch products again to see the updated state
@@ -120,7 +123,7 @@ const Products = () => {
         });
 
         // Send the request
-        axios.post('http://localhost/api/checkout/scan', { skus })
+        axios.post(`${apiUrl}/checkout/scan`, { skus })
             .then(response => {
                 // Handle success (e.g., show a success message, clear the basket, etc.)
                 console.log('Checkout successful:', response.data);
