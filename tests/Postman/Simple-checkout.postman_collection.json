@@ -20,7 +20,13 @@
 									"\r",
 									"pm.test(\"Status test 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
-									"});"
+									"});\r",
+									"\r",
+									"pm.test(\"Check if 'id' exists in response\", function () {\r",
+									"    pm.expect(response).to.have.property('id');\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"orderId\", response.id);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -37,15 +43,12 @@
 							}
 						}
 					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{}",
+							"raw": "{\r\n    \"skus\": [\"A\", \"A\"]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -53,7 +56,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/checkout/scan/DABABAAAA",
+							"raw": "{{host}}:{{port}}/api/checkout/scan",
 							"host": [
 								"{{host}}"
 							],
@@ -61,8 +64,7 @@
 							"path": [
 								"api",
 								"checkout",
-								"scan",
-								"DABABAAAA"
+								"scan"
 							]
 						}
 					},
@@ -79,6 +81,10 @@
 									"\r",
 									"pm.test(\"Status test 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check COMPLETED\", function () {\r",
+									"    pm.expect(response).to.have.property('status', 'COMPLETED');\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -112,7 +118,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/checkout/completeOrder/1",
+							"raw": "{{host}}:{{port}}/api/checkout/completeOrder/{{orderId}}",
 							"host": [
 								"{{host}}"
 							],
@@ -121,19 +127,61 @@
 								"api",
 								"checkout",
 								"completeOrder",
-								"1"
+								"{{orderId}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Cancel Order",
+					"name": "Cancel Completed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status test 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Order is already COMPLETED\", function () {\r",
+									"    pm.expect(response).to.have.property('error', 'Order is COMPLETED');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/checkout/cancelOrder/1",
+							"raw": "{{host}}:{{port}}/api/checkout/cancelOrder/{{orderId}}",
 							"host": [
 								"{{host}}"
 							],
@@ -142,7 +190,150 @@
 								"api",
 								"checkout",
 								"cancelOrder",
-								"1"
+								"{{orderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status test 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if 'id' exists in response\", function () {\r",
+									"    pm.expect(response).to.have.property('id');\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"orderId\", response.id);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"skus\": [\"A\", \"A\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/checkout/scan",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"checkout",
+								"scan"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Order",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status test 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check CANCELED\", function () {\r",
+									"    pm.expect(response).to.have.property('status', 'CANCELED');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{port}}/api/checkout/cancelOrder/{{orderId}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"checkout",
+								"cancelOrder",
+								"{{orderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Complete Canceled",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status test 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Order is already CANCELED\", function () {\r",
+									"    pm.expect(response).to.have.property('error', 'Order is CANCELED');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{port}}/api/checkout/completeOrder/{{orderId}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"checkout",
+								"completeOrder",
+								"{{orderId}}"
 							]
 						}
 					},
@@ -150,6 +341,26 @@
 				},
 				{
 					"name": "Order History",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status test 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is not empty and has at least one item\", function () {\r",
+									"    pm.expect(response).to.be.an('array').that.is.not.empty;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -174,6 +385,66 @@
 			"name": "Products",
 			"item": [
 				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status test 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if 'sku' exists in response\", function () {\r",
+									"    pm.expect(response).to.have.property('sku');\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"productSku\", response.sku);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sku\": \"F\",\r\n    \"price\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/products",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "List",
 					"event": [
 						{
@@ -184,6 +455,10 @@
 									"\r",
 									"pm.test(\"Status test 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is not empty and has at least one item\", function () {\r",
+									"    pm.expect(response).to.be.an('array').that.is.not.empty;\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -241,6 +516,10 @@
 									"\r",
 									"pm.test(\"Status test 200\", function () {\r",
 									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if 'sku' exists in response\", function () {\r",
+									"    pm.expect(response).to.have.property('sku');\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -274,7 +553,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/products/B",
+							"raw": "{{host}}:{{port}}/api/products/{{productSku}}",
 							"host": [
 								"{{host}}"
 							],
@@ -282,7 +561,7 @@
 							"path": [
 								"api",
 								"products",
-								"B"
+								"{{productSku}}"
 							]
 						}
 					},
@@ -299,6 +578,10 @@
 									"\r",
 									"pm.test(\"Status test 404\", function () {\r",
 									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Product not found\", function () {\r",
+									"    pm.expect(response).to.have.property('error', 'Product not found');\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -347,7 +630,181 @@
 					"response": []
 				},
 				{
-					"name": "Create",
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status test 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if 'sku' exists in response\", function () {\r",
+									"    pm.expect(response).to.have.property('sku');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"price\": 40\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/products/{{productSku}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"products",
+								"{{productSku}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/products/{{productSku}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"products",
+								"{{productSku}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Not Found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status test 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Product not found\", function () {\r",
+									"    pm.expect(response).to.have.property('error', 'Product not found');\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/products/{{productSku}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"products",
+								"{{productSku}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BulkPriceRules",
+			"item": [
+				{
+					"name": "Create Product",
 					"event": [
 						{
 							"listen": "test",
@@ -357,7 +814,13 @@
 									"\r",
 									"pm.test(\"Status test 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
-									"});"
+									"});\r",
+									"\r",
+									"pm.test(\"Check if 'sku' exists in response\", function () {\r",
+									"    pm.expect(response).to.have.property('sku');\r",
+									"});\r",
+									"\r",
+									"pm.environment.set(\"productSku\", response.sku);"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -401,7 +864,7 @@
 					"response": []
 				},
 				{
-					"name": "Update",
+					"name": "Create Rule",
 					"event": [
 						{
 							"listen": "test",
@@ -411,17 +874,103 @@
 									"\r",
 									"pm.test(\"Status test 201\", function () {\r",
 									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if 'id' exists in response\", function () {\r",
+									"    pm.expect(response).to.have.property('id');\r",
 									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
 							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"sku\": \"{{productSku}}\",\r\n    \"bulk_quantity\": 10,\r\n    \"bulk_price\": 20\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/bulkPriceRules",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"bulkPriceRules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List",
+					"event": [
 						{
-							"listen": "prerequest",
+							"listen": "test",
 							"script": {
 								"exec": [
-									""
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status test 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if at least one item has 'id', 'bulkQuantity', and 'bulkPrice'\", function () {\r",
+									"    let found = response.some(item => {\r",
+									"        return item.id && item.bulkQuantity && item.bulkPrice;\r",
+									"    });\r",
+									"    \r",
+									"    // Expect that we found at least one item with the properties\r",
+									"    pm.expect(found).to.be.true;\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{port}}/api/bulkPriceRules",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"bulkPriceRules"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var response = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status test 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check if 'id' exists in response\", function () {\r",
+									"    pm.expect(response).to.have.property('id');\r",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -433,7 +982,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"price\": 40,\r\n    \"isActive\": true\r\n}",
+							"raw": "{\r\n    \"bulk_quantity\": 10,\r\n    \"bulk_price\": 20\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -441,22 +990,22 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/products/F",
+							"raw": "{{host}}:{{port}}/api/bulkPriceRules/{{productSku}}",
 							"host": [
 								"{{host}}"
 							],
 							"port": "{{port}}",
 							"path": [
 								"api",
-								"products",
-								"F"
+								"bulkPriceRules",
+								"{{productSku}}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Delete",
+					"name": "Update Not Found",
 					"event": [
 						{
 							"listen": "test",
@@ -464,9 +1013,74 @@
 								"exec": [
 									"var response = pm.response.json();\r",
 									"\r",
-									"pm.test(\"Status test 204\", function () {\r",
-									"    pm.response.to.have.status(204);\r",
+									"pm.test(\"Status test 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Product not found\", function () {\r",
+									"    pm.expect(response).to.have.property('error', 'Product not found');\r",
 									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"bulk_quantity\": 10,\r\n    \"bulk_price\": 20\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}:{{port}}/api/bulkPriceRules/9c85f294-94df-468d-a9cb-99cce57c313c",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"bulkPriceRules",
+								"9c85f294-94df-468d-a9cb-99cce57c313c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Rule",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}:{{port}}/api/bulkPriceRules/{{productSku}}",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"bulkPriceRules",
+								"{{productSku}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -496,7 +1110,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{host}}:{{port}}/api/products/B",
+							"raw": "{{host}}:{{port}}/api/products/{{productSku}}",
 							"host": [
 								"{{host}}"
 							],
@@ -504,108 +1118,7 @@
 							"path": [
 								"api",
 								"products",
-								"B"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "BulkPriceRules",
-			"item": [
-				{
-					"name": "List Copy",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}:{{port}}/api/bulkPriceRules",
-							"host": [
-								"{{host}}"
-							],
-							"port": "{{port}}",
-							"path": [
-								"api",
-								"bulkPriceRules"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Copy",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"sku\": \"F\",\r\n    \"bulk_quantity\": 10,\r\n    \"bulk_price\": 20\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}:{{port}}/api/bulkPriceRules",
-							"host": [
-								"{{host}}"
-							],
-							"port": "{{port}}",
-							"path": [
-								"api",
-								"bulkPriceRules"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Copy",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"bulk_quantity\": 10,\r\n    \"bulk_price\": 20\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}:{{port}}/api/bulkPriceRules/C",
-							"host": [
-								"{{host}}"
-							],
-							"port": "{{port}}",
-							"path": [
-								"api",
-								"bulkPriceRules",
-								"C"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Copy",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{host}}:{{port}}/api/bulkPriceRules/C",
-							"host": [
-								"{{host}}"
-							],
-							"port": "{{port}}",
-							"path": [
-								"api",
-								"bulkPriceRules",
-								"C"
+								"{{productSku}}"
 							]
 						}
 					},
