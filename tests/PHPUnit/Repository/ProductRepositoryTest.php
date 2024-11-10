@@ -2,8 +2,8 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\Product;
-use App\Entity\Collections\ProductCollection;
+use App\Collections\ProductCollection;
+use App\Model\Product;
 use App\Tests\BaseTestCase;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ObjectRepository;

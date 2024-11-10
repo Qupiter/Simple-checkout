@@ -4,7 +4,7 @@ namespace App\Tests\Entity;
 
 use PHPUnit\Framework\TestCase;
 use DateTimeImmutable;
-use App\Entity\Entity;
+use App\Model\Entity;
 
 class EntityTraitTest extends TestCase
 {

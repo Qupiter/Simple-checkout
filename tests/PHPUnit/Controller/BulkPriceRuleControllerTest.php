@@ -2,11 +2,11 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Collections\RuleCollection;
-use App\Entity\Product;
-use App\Entity\BulkPriceRule;
-use App\Service\BulkPriceRuleService;
+use App\Collections\RuleCollection;
+use App\Model\BulkPriceRule;
+use App\Model\Product;
 use App\Repository\ProductRepository;
+use App\Service\BulkPriceRuleService;
 use Symfony\Component\HttpFoundation\Response;
 
 class BulkPriceRuleControllerTest extends BaseWebTestCase

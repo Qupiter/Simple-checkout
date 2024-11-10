@@ -2,8 +2,8 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Order;
-use App\Entity\Enums\OrderStatus;
+use App\Model\Order;
+use App\Model\Enums\OrderStatus;
 use PHPUnit\Framework\TestCase;
 
 class OrderTest extends TestCase

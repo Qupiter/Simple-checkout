@@ -2,8 +2,8 @@
 
 namespace App\Repository;
 
-use App\Entity\BulkPriceRule;
-use App\Entity\Collections\RuleCollection;
+use App\Collections\RuleCollection;
+use App\Model\BulkPriceRule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

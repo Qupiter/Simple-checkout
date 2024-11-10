@@ -2,8 +2,8 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Collections\ProductCollection;
-use App\Entity\Product;
+use App\Collections\ProductCollection;
+use App\Model\Product;
 use App\Service\ProductService;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Response;

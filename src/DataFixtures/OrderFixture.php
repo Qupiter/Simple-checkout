@@ -2,8 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Order;
-use App\Entity\Enums\OrderStatus;
+use App\Model\Order;
+use App\Model\Enums\OrderStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 

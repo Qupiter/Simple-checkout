@@ -2,8 +2,8 @@
 
 namespace App\Tests\Repository;
 
-use App\Entity\BulkPriceRule;
-use App\Entity\Collections\RuleCollection;
+use App\Collections\RuleCollection;
+use App\Model\BulkPriceRule;
 use App\Tests\BaseTestCase;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ObjectRepository;

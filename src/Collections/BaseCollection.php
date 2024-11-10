@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Collections;
+namespace App\Collections;
 
 use ArrayIterator;
 use Countable;

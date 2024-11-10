@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Collections;
+namespace App\Collections;
 
-use App\Entity\BulkPriceRule;
-use App\Entity\Product;
+use App\Model\BulkPriceRule;
+use App\Model\Product;
 use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
 

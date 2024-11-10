@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Collections;
+namespace App\Collections;
 
-use App\Entity\Product;
+use App\Model\Product;
 use InvalidArgumentException;
 
 class CartCollection extends BaseCollection

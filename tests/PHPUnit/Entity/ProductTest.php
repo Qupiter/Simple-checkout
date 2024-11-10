@@ -2,9 +2,9 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\Product;
+use App\Model\Product;
 use PHPUnit\Framework\TestCase;
-use App\Entity\BulkPriceRule;
+use App\Model\BulkPriceRule;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class ProductTest extends TestCase

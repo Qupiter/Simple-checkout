@@ -2,9 +2,9 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\BulkPriceRule;
-use App\Entity\Product;
-use App\Entity\Collections\RuleCollection;
+use App\Collections\RuleCollection;
+use App\Model\BulkPriceRule;
+use App\Model\Product;
 use App\Repository\BulkPriceRuleRepository;
 use App\Service\BulkPriceRuleService;
 use Doctrine\ORM\EntityManagerInterface;

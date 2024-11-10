@@ -2,7 +2,7 @@
 
 namespace App\Tests\Service\Collections;
 
-use App\Service\Collections\BaseCollection;
+use App\Collections\BaseCollection;
 use PHPUnit\Framework\TestCase;
 
 class TestCollection extends BaseCollection

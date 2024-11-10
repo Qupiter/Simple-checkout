@@ -2,13 +2,13 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\BulkPriceRule;
-use App\Entity\Collections\RuleCollection;
-use App\Entity\Enums\OrderStatus;
-use App\Entity\Order;
-use App\Entity\Product;
+use App\Collections\CartCollection;
+use App\Collections\RuleCollection;
+use App\Model\BulkPriceRule;
+use App\Model\Enums\OrderStatus;
+use App\Model\Order;
+use App\Model\Product;
 use App\Repository\OrderRepository;
-use App\Service\Collections\CartCollection;
 use App\Service\CheckoutService;
 use App\Service\Exceptions\OrderCanceledException;
 use App\Service\Exceptions\OrderCompletedException;

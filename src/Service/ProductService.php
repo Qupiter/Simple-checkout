@@ -2,8 +2,8 @@
 
 namespace App\Service;
 
-use App\Entity\Collections\ProductCollection;
-use App\Entity\Product;
+use App\Collections\ProductCollection;
+use App\Model\Product;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 

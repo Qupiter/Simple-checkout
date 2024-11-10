@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Model;
 
-use App\Entity\Interfaces\PriceRule;
+use App\Model\Interfaces\PriceRule;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: 'App\Repository\BulkPriceRuleRepository')]

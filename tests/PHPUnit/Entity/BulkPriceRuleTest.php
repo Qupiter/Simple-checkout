@@ -2,8 +2,8 @@
 
 namespace App\Tests\Entity;
 
-use App\Entity\BulkPriceRule;
-use App\Entity\Product;
+use App\Model\BulkPriceRule;
+use App\Model\Product;
 use PHPUnit\Framework\TestCase;
 
 class BulkPriceRuleTest extends TestCase

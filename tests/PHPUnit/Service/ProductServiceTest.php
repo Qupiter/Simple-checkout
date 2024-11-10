@@ -2,11 +2,11 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\Collections\ProductCollection;
-use App\Entity\Product;
+use App\Collections\ProductCollection;
+use App\Model\Product;
 use App\Repository\ProductRepository;
-use App\Service\ProductService;
 use App\Service\BulkPriceRuleService;
+use App\Service\ProductService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 

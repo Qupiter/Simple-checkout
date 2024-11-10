@@ -2,11 +2,11 @@
 
 namespace App\Tests\Service\Collections;
 
-use App\Entity\Product;
-use App\Service\Collections\BaseCollection;
-use App\Service\Collections\CartCollection;
-use PHPUnit\Framework\TestCase;
+use App\Collections\BaseCollection;
+use App\Collections\CartCollection;
+use App\Model\Product;
 use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 
 class DummyCollection extends BaseCollection
 {

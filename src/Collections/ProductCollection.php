@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Collections;
+namespace App\Collections;
 
-use App\Entity\Product;
+use App\Model\Product;
 use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
 

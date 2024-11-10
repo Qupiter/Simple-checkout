@@ -2,9 +2,9 @@
 
 namespace App\Tests\Entity\Collections;
 
-use App\Entity\BulkPriceRule;
-use App\Entity\Product;
-use App\Entity\Collections\RuleCollection;
+use App\Collections\RuleCollection;
+use App\Model\BulkPriceRule;
+use App\Model\Product;
 use PHPUnit\Framework\TestCase;
 
 class RuleCollectionTest extends TestCase

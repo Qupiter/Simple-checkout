@@ -2,7 +2,7 @@
 
 namespace App\Service\Exceptions;
 
-use App\Entity\Enums\OrderStatus;
+use App\Model\Enums\OrderStatus;
 use Throwable;
 
 class OrderCanceledException extends \Exception

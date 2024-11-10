@@ -2,8 +2,8 @@
 
 namespace App\Tests\Entity\Collections;
 
-use App\Entity\Collections\ProductCollection;
-use App\Entity\Product;
+use App\Collections\ProductCollection;
+use App\Model\Product;
 use PHPUnit\Framework\TestCase;
 
 class ProductCollectionTest extends TestCase

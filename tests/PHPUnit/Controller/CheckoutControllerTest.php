@@ -2,10 +2,10 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Collections\ProductCollection;
-use App\Entity\Collections\RuleCollection;
-use App\Entity\Order;
-use App\Entity\Product;
+use App\Collections\ProductCollection;
+use App\Collections\RuleCollection;
+use App\Model\Order;
+use App\Model\Product;
 use App\Kernel;
 use App\Repository\OrderRepository;
 use App\Service\BulkPriceRuleService;
